@@ -85,5 +85,6 @@ INSERT INTO
   question_likes (question_id, user_id)
 VALUES
   ((SELECT id FROM questions WHERE title = 'what is homework'),
-   (SELECT id FROM users WHERE lname = 'Schwarzenbach')
- );
+   (SELECT id FROM users WHERE lname = 'Schwarzenbach')),
+  ((SELECT id FROM questions WHERE title = 'what is homework'),
+   (SELECT id FROM users WHERE lname = 'Ruggeri'));
