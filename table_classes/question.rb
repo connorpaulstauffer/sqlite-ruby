@@ -6,6 +6,7 @@ class Question
   attr_accessor :title, :body, :author_id
 
   include DataModule
+  extend FindById
 
   def self.find_by_author_id(id)
     results = QuestionsDatabase.instance.execute(<<-SQL, id)
@@ -16,8 +17,8 @@ class Question
     WHERE
       id = ?
     SQL
-    return nil if results.empty?
-    results.map { |result| Question.new(result)}
+
+    results.map { |result| Question.new(result) }
   end
 
   def self.most_followed(n)
@@ -54,6 +55,4 @@ class Question
   def num_likes
     QuestionLike.num_likes_for_question_id(id)
   end
-
-  extend FindById
 end

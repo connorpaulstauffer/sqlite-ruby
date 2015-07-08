@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS questions;
-DROP TABLE IF EXISTS question_follows;
+DROP TABLE IF EXISTS questionfollows;
 DROP TABLE IF EXISTS replies;
-DROP TABLE IF EXISTS question_likes;
+DROP TABLE IF EXISTS questionlikes;
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY,
@@ -18,7 +18,7 @@ CREATE TABLE questions (
   FOREIGN KEY(author_id) REFERENCES users(id)
 );
 
-CREATE TABLE question_follows (
+CREATE TABLE questionfollows (
   id INTEGER PRIMARY KEY,
   question_id INTEGER NOT NULL,
   follower_id INTEGER NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE replies (
   FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
-CREATE TABLE question_likes (
+CREATE TABLE questionlikes (
   id INTEGER PRIMARY KEY,
   question_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
@@ -59,7 +59,7 @@ VALUES
    (SELECT id FROM users WHERE lname = 'Schwarzenbach')) ;
 
 INSERT INTO
-  question_follows (question_id, follower_id)
+  questionfollows (question_id, follower_id)
 VALUES
   ((SELECT id FROM questions WHERE title = 'what is homework'),
    (SELECT id FROM users WHERE lname = 'Ruggeri')
@@ -82,7 +82,7 @@ VALUES
     (SELECT id FROM users WHERE lname = 'Ruggeri'));
 
 INSERT INTO
-  question_likes (question_id, user_id)
+  questionlikes (question_id, user_id)
 VALUES
   ((SELECT id FROM questions WHERE title = 'what is homework'),
    (SELECT id FROM users WHERE lname = 'Schwarzenbach')),

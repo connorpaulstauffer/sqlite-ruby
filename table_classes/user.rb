@@ -1,11 +1,13 @@
 require_relative '../modules/data_module'
 require_relative '../modules/class_method_module'
 
+
 class User
   attr_reader :id
   attr_accessor :fname, :lname
 
   include DataModule
+  extend FindById
 
   def self.find_by_name(fname, lname)
     result = QuestionsDatabase.instance.execute(<<-SQL, fname, lname).first
@@ -16,8 +18,8 @@ class User
     WHERE
       fname = ? AND lname = ?
     SQL
-    return nil if result.nil?
-    User.new(result)
+
+    result.nil? ? nil : User.new(result)
   end
 
   def initialize(options = {})
@@ -45,17 +47,15 @@ class User
   def average_karma
     result = QuestionsDatabase.instance.execute(<<-SQL, id)
     SELECT
-      CAST(COUNT(question_likes.id) AS FLOAT) / COUNT(DISTINCT(questions.id)) avg
+      CAST(COUNT(questionlikes.id) AS FLOAT) / COUNT(DISTINCT(questions.id)) avg
     FROM
       questions
     LEFT JOIN
-      question_likes ON question_likes.question_id = questions.id
+      questionlikes ON questionlikes.question_id = questions.id
     WHERE
       questions.author_id = ?
     SQL
-      return 0 if result.nil?
-      result.first['avg']
-  end
 
-  extend FindById
+    result.nil? ? 0 : result.first['avg']
+  end
 end

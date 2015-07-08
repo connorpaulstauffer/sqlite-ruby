@@ -1,10 +1,13 @@
 require_relative '../modules/data_module'
 require_relative '../modules/class_method_module'
+
+
 class Reply
   attr_reader :id, :question_id, :parent_id, :user_id
   attr_accessor :body
 
   include DataModule
+  extend FindById
 
   def self.find_by_parent_id(id)
     results = QuestionsDatabase.instance.execute(<<-SQL, id)
@@ -26,11 +29,10 @@ class Reply
     FROM
       replies
     WHERE
-        user_id = ?
+      user_id = ?
     SQL
 
     return nil if results.empty?
-
     results.map { |result| Reply.new(result)}
   end
 
@@ -45,8 +47,7 @@ class Reply
     SQL
 
     return nil if results.empty?
-
-    results.map { |result| Reply.new(result)}
+    results.map { |result| Reply.new(result) }
   end
 
   def initialize(options = {})
@@ -72,6 +73,4 @@ class Reply
   def child_replies
     Reply.find_by_parent_id(id)
   end
-
-  extend FindById
 end
